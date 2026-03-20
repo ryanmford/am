@@ -724,7 +724,7 @@ function App() {
         <div className={`fixed inset-0 z-[300] pt-24 pb-12 px-10 flex flex-col transition-all duration-500 animate-in fade-in slide-in-from-right-full ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
           <div className="flex justify-between items-center mb-16 shrink-0">
             <div className="text-4xl font-black tracking-tighter lowercase cursor-pointer" onClick={() => handleNav('home')}>{CONFIG.brand}</div>
-            <button className="cursor-pointer p-4 border-4 border-current rounded-full hover:rotate-90 transition-transform duration-300" onClick={() => setIsMenuOpen(false)}><CloseIcon size={28} /></button>
+            <button className="cursor-pointer p-4 border-4 border-current rounded-full hover:rotate-90 transition-transform duration-300" onClick={() => setIsMenuOpen(false)}><X size={28} /></button>
           </div>
           
           <div className="flex-grow flex flex-col justify-center space-y-6 overflow-y-auto pb-20">
