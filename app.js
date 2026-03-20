@@ -143,7 +143,7 @@ const Modal = ({ isOpen, onClose, children, theme = 'light' }) => {
   );
 };
 
-export default function App() {
+function App() {
   const [theme, setTheme] = useState('light');
   const [scrolled, setScrolled] = useState(false);
   const [isArcExpanded, setIsArcExpanded] = useState(false);
@@ -917,4 +917,4 @@ export default function App() {
   );
 }
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(React.createElement(App));
+root.render(<App />);
