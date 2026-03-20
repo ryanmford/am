@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apex Movement Logic</title>
     
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
@@ -17,12 +17,21 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
-        #root { min-height: 100vh; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: white; }
     </style>
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel" data-presets="react" src="app.js"></script>
+    <script type="text/babel" data-presets="react">
+        // We will put a "Loader" here to pull in your app.js
+        async function loadApp() {
+            const response = await fetch('app.js');
+            const code = await response.text();
+            // This tells Babel to compile the app.js text and run it
+            const transformed = Babel.transform(code, { presets: ['react'] }).code;
+            eval(transformed);
+        }
+        loadApp().catch(err => console.error("Apex Load Error:", err));
+    </script>
 </body>
 </html>
