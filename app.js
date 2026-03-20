@@ -1,40 +1,14 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { 
-  ArrowRight, 
-  ExternalLink, 
-  Menu, 
-  X as CloseIcon, 
-  ChevronLeft, 
-  Plus,
-  RotateCcw,
-  CheckCircle2, 
-  Zap,
-  Users,
-  Target,
-  Layers,
-  Calendar,
-  Activity,
-  Building2,
-  Camera,
-  GraduationCap,
-  Loader2,
-  Sun,
-  Moon,
-  Instagram,
-  Youtube,
-  Twitter,
-  ChevronRight,
-  Dna,
-  Scale,
-  Globe,
-  DraftingCompass,
-  Torus,
-  BookOpen,
-  Info,
-  Newspaper,
-  ShoppingBag,
-  Move
-} from 'lucide-react';
+const { useState, useEffect, useCallback, useMemo, useRef } = React;
+const { 
+  ArrowRight, ExternalLink, Menu, X, ChevronLeft, Plus, RotateCcw, 
+  CheckCircle2, Zap, Users, Target, Layers, Calendar, Activity, 
+  Building2, Camera, GraduationCap, Loader2, Sun, Moon, Instagram, 
+  Youtube, Twitter, ChevronRight, Dna, Scale, Globe, DraftingCompass, 
+  Torus, BookOpen, Info, Newspaper, ShoppingBag, Move 
+} = Lucide;
+
+// Replace 'CloseIcon' in the code below with just 'X' if you see it, 
+// or leave it as is if you renamed it in the imports.
 
 // --- CONFIG & MOCK DATA ---
 const GIF_POOL = [
