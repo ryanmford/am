@@ -1,15 +1,15 @@
-const { useState, useEffect, useCallback, useMemo, useRef } = React;
+// --- BROWSER ADAPTER ---
+const { useState, useEffect, useCallback, useMemo, useRef } = window.React;
+
+// Safety check for Lucide icons
+const Icons = window.LucideReact || {};
 const { 
   ArrowRight, ExternalLink, Menu, X, ChevronLeft, Plus, RotateCcw, 
   CheckCircle2, Zap, Users, Target, Layers, Calendar, Activity, 
   Building2, Camera, GraduationCap, Loader2, Sun, Moon, Instagram, 
   Youtube, Twitter, ChevronRight, Dna, Scale, Globe, DraftingCompass, 
   Torus, BookOpen, Info, Newspaper, ShoppingBag, Move 
-} = LucideReact;
-
-// Replace 'CloseIcon' in the code below with just 'X' if you see it, 
-// or leave it as is if you renamed it in the imports.
-
+} = Icons;
 // --- CONFIG & MOCK DATA ---
 const GIF_POOL = [
   "https://assets.skool.com/f/0c9cb7a4934f4cb49036984b608de8ff/6b32f8106414469b8c5a2912216ab78df1df0c5669fb463fbd4018a2d95142a2.gif", 
