@@ -510,7 +510,7 @@ function App() {
                 <div className="animate-in zoom-in-95 duration-700 text-center">
                   <div className="flex justify-center mb-12">
                     <div className="w-24 h-24 bg-current text-white rounded-full flex items-center justify-center animate-bounce shadow-2xl">
-                      <CheckCircle2 size={48} />
+                      <CircleCheck size={48} />
                     </div>
                   </div>
                   <h2 className="text-5xl md:text-8xl font-black tracking-tighter lowercase mb-16">{getRecommendation().title}</h2>
@@ -696,7 +696,7 @@ function App() {
         {[
             { id: 'consulting', title: 'Spatial Architecture', icon: <DraftingCompass size={36} />, detail: 'Biomechanical auditing and facility design for high-performance units.' },
             { id: 'media', title: 'Media Production', icon: <Camera size={36} />, detail: 'Stunt coordination and technical performance oversight for media.' },
-            { id: 'gym', title: 'Facility Logic', icon: <Building2 size={36} />, detail: 'Structural logistics and specialized equipment procurement.' },
+            { id: 'gym', title: 'Facility Logic', icon: <Building size={36} />, detail: 'Structural logistics and specialized equipment procurement.' },
             { id: 'cert', title: 'Group Training', icon: <GraduationCap size={36} />, detail: 'Coaching certification for institutional staff and athletic programs.' },
         ].map((cat, i) => (
             <button key={i} onClick={() => {
