@@ -5,7 +5,7 @@ const {
   Building2, Camera, GraduationCap, Loader2, Sun, Moon, Instagram, 
   Youtube, Twitter, ChevronRight, Dna, Scale, Globe, DraftingCompass, 
   Torus, BookOpen, Info, Newspaper, ShoppingBag, Move 
-} = Lucide;
+} = LucideReact;
 
 // Replace 'CloseIcon' in the code below with just 'X' if you see it, 
 // or leave it as is if you renamed it in the imports.
@@ -916,15 +916,5 @@ export default function App() {
     </div>
   );
 }
-                          // --- MOUNTING ---
-import ReactDOM from 'react-dom/client';
-
-const rootElement = document.getElementById('root');
-if (rootElement) {
-  const root = ReactDOM.createRoot(rootElement);
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-}
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
