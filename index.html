@@ -1,41 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apex Movement</title>
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-</head>
-<body class="bg-black text-white">
-  
-  <div id="root"></div>
-
-  <script type="text/babel">
-    // 1. Pull what we need from React
-    const { useState, useEffect, useCallback, useMemo, useRef } = React;
-    
-    // 2. Pull what we need from Lucide (Notice the lowercase 'l')
-const { 
-  ArrowRight, ExternalLink, Menu, X, ChevronLeft, Plus, RotateCcw, 
-  CircleCheck, Zap, Users, Target, Layers, Calendar, Activity, 
-  Building, Camera, GraduationCap, Loader2, Sun, Moon, Instagram, 
-// ...
-    } = lucideReact;
-
-    // --- PASTE YOUR CONFIG, MOCK DATA, AND COMPONENTS HERE ---
-    // (Everything from `const GIF_POOL` all the way down to `function App() { ... }`)
-    // Make sure `export default` is REMOVED from the App function!
-    // Make sure both `CloseIcon`s are changed to `X`!
-
-    // 3. Render the app
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
-  
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>am</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

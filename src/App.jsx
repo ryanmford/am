@@ -1,16 +1,12 @@
-// --- BROWSER ADAPTER ---
-const { useState, useEffect, useCallback, useMemo, useRef } = window.React;
-
-// Safety check for Lucide icons
-const Icons = window.LucideReact || {};
-const { 
+import React, { useState, useEffect, useCallback } from 'react';
+import { 
   ArrowRight, ExternalLink, Menu, X, ChevronLeft, Plus, RotateCcw, 
-  CheckCircle2, Zap, Users, Target, Layers, Calendar, Activity, 
-  Building2, Camera, GraduationCap, Loader2, Sun, Moon, Instagram, 
+  CircleCheck, Zap, Users, Target, Layers, Calendar, Activity, 
+  Building, Camera, GraduationCap, Loader2, Sun, Moon, Instagram, 
   Youtube, Twitter, ChevronRight, Dna, Scale, Globe, DraftingCompass, 
   Torus, BookOpen, Info, Newspaper, ShoppingBag, Move 
-} = Icons;
-// --- CONFIG & MOCK DATA ---
+} from 'lucide-react';
+
 const GIF_POOL = [
   "https://assets.skool.com/f/0c9cb7a4934f4cb49036984b608de8ff/6b32f8106414469b8c5a2912216ab78df1df0c5669fb463fbd4018a2d95142a2.gif", 
   "https://assets.skool.com/f/0c9cb7a4934f4cb49036984b608de8ff/7e442be4b6c24198a081b90338bc2f839dec9e3bd2354297a58e085da53ebacf.gif", 
@@ -66,12 +62,9 @@ const BLOG_POSTS = [
   { id: "post-3", date: "JAN 2024", title: "Archival Intelligence.", preview: "Why we moved our 20-year library to Skool to foster a decentralized, logic-driven community.", gif: GIF_POOL[1] }
 ];
 
-// --- REUSABLE UI COMPONENTS ---
 const UI = {
   Button: ({ children, primary = true, className = "", onClick, theme = 'light', type = "button" }) => {
-    // Simplified button logic to remove "weird line" artifacts
     const base = "px-10 py-5 font-black transition-all duration-300 border-2 active:scale-95 text-[11px] uppercase tracking-[0.25em] flex items-center justify-center gap-3 cursor-pointer rounded-none";
-    
     let colors = "";
     if (theme === 'dark') {
       colors = primary 
@@ -82,7 +75,6 @@ const UI = {
         ? "bg-black text-white border-black hover:bg-white hover:text-black" 
         : "bg-transparent text-black border-black/30 hover:border-black hover:bg-black/5";
     }
-
     return (
       <button type={type} onClick={onClick} className={`${base} ${colors} ${className}`}>
         {children}
@@ -135,7 +127,7 @@ const Modal = ({ isOpen, onClose, children, theme = 'light' }) => {
       <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-black/98' : 'bg-white/98'} backdrop-blur-xl cursor-crosshair`} onClick={onClose}></div>
       <div className={`relative w-full max-w-6xl ${theme === 'dark' ? 'bg-black border-white/20 shadow-[24px_24px_0px_0px_rgba(255,255,255,1)] text-white' : 'bg-white border-black shadow-[24px_24px_0px_0px_rgba(0,0,0,1)] text-black'} border-4 p-6 md:p-12 overflow-y-auto max-h-[90vh] transition-all duration-500 ease-out`}>
         <button onClick={onClose} className="absolute top-6 right-6 hover:rotate-180 transition-transform duration-500 z-10 cursor-pointer p-2 border-2 border-current rounded-full group">
-         <X size={24} className="group-hover:scale-110 transition-transform" />
+          <X size={24} className="group-hover:scale-110 transition-transform" />
         </button>
         {children}
       </div>
@@ -143,7 +135,7 @@ const Modal = ({ isOpen, onClose, children, theme = 'light' }) => {
   );
 };
 
-function App() {
+export default function App() {
   const [theme, setTheme] = useState('light');
   const [scrolled, setScrolled] = useState(false);
   const [isArcExpanded, setIsArcExpanded] = useState(false);
@@ -163,7 +155,6 @@ function App() {
 
   const handleNav = useCallback((view, anchor = null) => {
     setIsMenuOpen(false);
-    
     if (anchor) {
       if (currentView !== 'home') {
         setCurrentView('home');
@@ -298,11 +289,8 @@ function App() {
     setPathHistory([0]);
   };
 
-  // --- VIEW RENDERERS ---
-
   const renderHome = () => (
     <>
-      {/* --- HERO SECTION --- */}
       <section className={`relative group h-[90vh] md:h-screen w-full flex items-center justify-center overflow-hidden border-b-2 transition-colors duration-500 ${theme === 'dark' ? 'border-neutral-900' : 'border-neutral-100'}`}>
         <div className="absolute inset-0 z-0">
           <UI.Image 
@@ -350,7 +338,6 @@ function App() {
         </div>
       </section>
 
-      {/* --- ABOUT PREVIEW SUMMARY --- */}
       <section className={`py-40 px-6 border-b-2 ${theme === 'dark' ? 'border-neutral-900 bg-neutral-950' : 'border-neutral-100 bg-neutral-50'}`}>
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-24 items-center">
@@ -371,12 +358,12 @@ function App() {
             </div>
             <div className="relative">
                <div className={`aspect-square md:aspect-video border-4 border-current shadow-[24px_24px_0px_0px_rgba(current,0.05)] overflow-hidden cursor-pointer group`} onClick={() => handleNav('about')}>
-                  <UI.Image src={GIF_POOL[2]} alt="About Apex" coloredOnHover={true} forceColor={false} />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
-                     <div className="w-20 h-20 bg-white text-black rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-500">
-                        <Plus size={32} />
-                     </div>
-                  </div>
+                 <UI.Image src={GIF_POOL[2]} alt="About Apex" coloredOnHover={true} forceColor={false} />
+                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
+                    <div className="w-20 h-20 bg-white text-black rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-500">
+                       <Plus size={32} />
+                    </div>
+                 </div>
                </div>
                <div className="absolute -bottom-8 -right-8 p-12 bg-current text-white hidden md:block">
                   <div className="text-5xl font-black">18+</div>
@@ -387,7 +374,6 @@ function App() {
         </div>
       </section>
 
-      {/* --- LIBRARY PREVIEW SECTION --- */}
       <section id="library" className="py-40 px-6 max-w-7xl mx-auto overflow-hidden scroll-mt-24">
         <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-10">
           <div className="space-y-6">
@@ -439,7 +425,6 @@ function App() {
         </div>
       </section>
 
-      {/* --- PATHFINDER SECTION --- */}
       <section id="pathfinder" className={`py-40 px-6 scroll-mt-24`}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-24 space-y-6">
@@ -522,7 +507,6 @@ function App() {
         </div>
       </section>
 
-      {/* --- BLOG PREVIEW SECTION --- */}
       <section className="py-40 px-6 border-t-2 border-current/10">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-24 gap-10">
@@ -544,7 +528,6 @@ function App() {
         </div>
       </section>
 
-      {/* --- PROJECTS SECTION --- */}
       <section id="arc" className={`${theme === 'dark' ? 'bg-neutral-950 text-white' : 'bg-black text-white'} py-40 px-6 overflow-hidden scroll-mt-24 transition-colors duration-1000`}>
         <div className="max-w-7xl mx-auto">
           <div className="mb-24 flex flex-col md:flex-row md:items-end justify-between gap-10">
@@ -916,5 +899,3 @@ function App() {
     </div>
   );
 }
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
