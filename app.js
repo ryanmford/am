@@ -135,7 +135,7 @@ const Modal = ({ isOpen, onClose, children, theme = 'light' }) => {
       <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-black/98' : 'bg-white/98'} backdrop-blur-xl cursor-crosshair`} onClick={onClose}></div>
       <div className={`relative w-full max-w-6xl ${theme === 'dark' ? 'bg-black border-white/20 shadow-[24px_24px_0px_0px_rgba(255,255,255,1)] text-white' : 'bg-white border-black shadow-[24px_24px_0px_0px_rgba(0,0,0,1)] text-black'} border-4 p-6 md:p-12 overflow-y-auto max-h-[90vh] transition-all duration-500 ease-out`}>
         <button onClick={onClose} className="absolute top-6 right-6 hover:rotate-180 transition-transform duration-500 z-10 cursor-pointer p-2 border-2 border-current rounded-full group">
-          <CloseIcon size={24} className="group-hover:scale-110 transition-transform" />
+         <X size={24} className="group-hover:scale-110 transition-transform" />
         </button>
         {children}
       </div>
