@@ -36,7 +36,7 @@ const BIOS = [
     role: "The Collective Standard",
     story: "Founded in 2006, Apex is a movement logic collective dedicated to extracting the universal laws of physical performance. We don't teach style; we teach the architecture of human output.",
     focus: ["Biomechanics", "Kinetic Chains", "Physics First"],
-    metrics: "18+ Years",
+    metrics: "Est. 2006",
     gif: GIF_POOL[2]
   },
   {
@@ -109,7 +109,7 @@ const BLOG_POSTS = [
 // Memoized UI Components
 const UI = {
   Button: memo(({ children, primary = true, className = "", onClick, theme = 'light', type = "button" }) => {
-    const base = "px-6 md:px-10 py-4 md:py-5 font-black transition-all duration-300 border-2 active:scale-95 text-[10px] md:text-[11px] uppercase tracking-[0.2em] md:tracking-[0.25em] flex items-center justify-center gap-3 cursor-pointer rounded-none text-center whitespace-normal break-words";
+    const base = "px-6 md:px-10 py-4 md:py-5 font-black transition-all duration-300 border-2 active:scale-95 text-[11px] md:text-[12px] uppercase tracking-[0.2em] md:tracking-[0.25em] flex items-center justify-center gap-3 cursor-pointer rounded-none text-center whitespace-normal break-words";
     let colors = "";
     if (theme === 'dark') {
       colors = primary 
@@ -144,7 +144,7 @@ const UI = {
           src={src} 
           alt={alt} 
           onLoad={() => setLoaded(true)}
-          className={`w-full h-full object-cover transition-all duration-1000 ease-out ${loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-110'} 
+          className={`w-full h-full object-cover transition-all duration-1000 ease-out ${loaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'} 
           ${forceColor ? 'grayscale-0' : (coloredOnHover ? 'grayscale group-hover:grayscale-0 group-hover:scale-105' : 'grayscale-0')} ${className}`}
           loading="lazy"
         />
@@ -161,17 +161,20 @@ const UI = {
 
 const Modal = memo(({ isOpen, onClose, children, theme = 'light' }) => {
   useEffect(() => {
-    if (isOpen) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = 'unset';
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
     return () => { document.body.style.overflow = 'unset'; };
   }, [isOpen]);
 
   if (!isOpen) return null;
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-2 sm:p-4 md:p-8 animate-in fade-in duration-400">
-      <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-black/98' : 'bg-white/98'} backdrop-blur-xl cursor-crosshair`} onClick={onClose}></div>
-      <div className={`relative w-full max-w-6xl ${theme === 'dark' ? 'bg-black border-white/20 shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] md:shadow-[24px_24px_0px_0px_rgba(255,255,255,1)] text-white' : 'bg-white border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] md:shadow-[24px_24px_0px_0px_rgba(0,0,0,1)] text-black'} border-2 md:border-4 p-5 sm:p-8 md:p-12 overflow-y-auto max-h-[92vh] transition-all duration-500 ease-out scrollbar-hide`}>
-        <button onClick={onClose} className="absolute top-4 right-4 md:top-6 md:right-6 hover:rotate-180 transition-transform duration-500 z-50 cursor-pointer p-2 border-2 border-current rounded-full group bg-inherit">
+    <div className="fixed inset-0 z-[500] flex items-center justify-center p-2 sm:p-4 md:p-8 animate-in fade-in duration-400">
+      <div className={`absolute inset-0 ${theme === 'dark' ? 'bg-black/98' : 'bg-white/98'} backdrop-blur-xl cursor-pointer`} onClick={onClose}></div>
+      <div className={`relative w-full max-w-6xl ${theme === 'dark' ? 'bg-black border-white shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] md:shadow-[24px_24px_0px_0px_rgba(255,255,255,1)] text-white' : 'bg-white border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] md:shadow-[24px_24px_0px_0px_rgba(0,0,0,1)] text-black'} border-2 md:border-4 p-5 sm:p-8 md:p-12 overflow-y-auto max-h-[92vh] transition-all duration-500 ease-out scrollbar-hide animate-in zoom-in-95`}>
+        <button onClick={onClose} className="absolute top-4 right-4 md:top-6 md:right-6 hover:rotate-90 transition-transform duration-500 z-[600] cursor-pointer p-2 border-2 border-current rounded-full group bg-current text-white dark:text-black">
           <X size={20} className="group-hover:scale-110 transition-transform md:w-6 md:h-6" />
         </button>
         <div className="max-w-full overflow-x-hidden">
@@ -185,7 +188,6 @@ const Modal = memo(({ isOpen, onClose, children, theme = 'light' }) => {
 export default function App() {
   const [theme, setTheme] = useState('light');
   const [scrolled, setScrolled] = useState(false);
-  const [isArcExpanded, setIsArcExpanded] = useState(false);
   const [activeManual, setActiveManual] = useState(null);
   const [activeProject, setActiveProject] = useState(null);
   const [activeBlogPost, setActiveBlogPost] = useState(null);
@@ -198,28 +200,29 @@ export default function App() {
   const [libraryDisplayCount, setLibraryDisplayCount] = useState(3);
   const [hasExpandedLibrary, setHasExpandedLibrary] = useState(false);
 
+  const [visibleProjectsRow, setVisibleProjectsRow] = useState(1);
+  const projectsPerRow = 4;
+
   const toggleTheme = useCallback(() => setTheme(prev => prev === 'light' ? 'dark' : 'light'), []);
 
   const handleNav = useCallback((view, anchor = null) => {
     setIsMenuOpen(false);
+    
+    const scrollToTarget = (targetId) => {
+      const element = document.getElementById(targetId.replace('#', ''));
+      if (element) {
+        const yOffset = -100;
+        const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }
+    };
+
     if (anchor) {
       if (currentView !== 'home') {
         setCurrentView('home');
-        setTimeout(() => {
-          const element = document.getElementById(anchor.replace('#', ''));
-          if (element) {
-            const yOffset = -80;
-            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-            window.scrollTo({ top: y, behavior: 'smooth' });
-          }
-        }, 150);
+        setTimeout(() => scrollToTarget(anchor), 150);
       } else {
-        const element = document.getElementById(anchor.replace('#', ''));
-        if (element) {
-          const yOffset = -80;
-          const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }
+        scrollToTarget(anchor);
       }
     } else {
       setCurrentView(view);
@@ -243,7 +246,10 @@ export default function App() {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`Failed to fetch ${sheetName}`);
         const text = await response.text();
-        return JSON.parse(text.substring(47, text.length - 2));
+        // Safe parsing of Gviz JSON
+        const match = text.match(/google\.visualization\.Query\.setResponse\((.*)\);/);
+        if (!match) return null;
+        return JSON.parse(match[1]);
       } catch (e) { return null; }
     };
 
@@ -357,7 +363,7 @@ export default function App() {
             className="w-full h-full object-cover"
             coloredOnHover={true}
           />
-          <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors duration-1000"></div>
+          <div className="absolute inset-0 bg-black/60 group-hover:bg-black/50 transition-colors duration-1000"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
         </div>
 
@@ -410,7 +416,7 @@ export default function App() {
                </UI.Button>
             </div>
             <div className="relative mt-12 lg:mt-0 flex justify-center">
-               <div className={`aspect-[4/5] w-full max-w-sm sm:max-w-md border-4 border-current shadow-[12px_12px_0px_0px_rgba(current,0.1)] md:shadow-[24px_24px_0px_0px_rgba(current,0.1)] overflow-hidden cursor-pointer group relative`} onClick={() => handleNav('about')}>
+               <div className={`aspect-[4/5] w-full max-w-sm sm:max-w-md border-4 border-current shadow-[12px_12px_0px_0px_rgba(current,0.1)] md:shadow-[24px_24px_0px_0px_rgba(current,0.1)] overflow-hidden cursor-pointer group relative transition-all duration-500 hover:shadow-none`} onClick={() => handleNav('about')}>
                  <UI.Image src={GIF_POOL[2]} alt="About Apex" coloredOnHover={true} forceColor={false} />
                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all flex items-center justify-center">
                     <div className="w-16 h-16 md:w-20 md:h-20 bg-white text-black rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-500">
@@ -419,8 +425,8 @@ export default function App() {
                  </div>
                </div>
                <div className="absolute -bottom-4 -right-4 md:-bottom-10 md:-right-10 p-5 md:p-10 border-4 border-current bg-transparent backdrop-blur-md hidden sm:block">
-                  <div className="text-3xl md:text-5xl font-black leading-none">18+</div>
-                  <div className="text-[9px] md:text-[10px] font-bold tracking-widest uppercase opacity-60">Years of R&D</div>
+                  <div className="text-3xl md:text-5xl font-black leading-none uppercase">Apex</div>
+                  <div className="text-[9px] md:text-[10px] font-bold tracking-widest uppercase opacity-60">The Standard</div>
                </div>
             </div>
           </div>
@@ -457,7 +463,7 @@ export default function App() {
               </div>
               <div className="p-6 md:p-10">
                 <div className="flex justify-between items-start mb-4">
-                   <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] opacity-30 block group-hover:opacity-100 transition-opacity truncate max-w-[140px] md:max-w-[150px]">
+                   <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] opacity-30 block group-hover:opacity-100 transition-opacity truncate max-w-[140px]">
                       {item.intro}
                    </span>
                    <ArrowRight size={18} className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500" />
@@ -474,43 +480,43 @@ export default function App() {
         <div className="flex justify-center">
           <UI.Button onClick={handleLibraryExpansion} primary={!hasExpandedLibrary} theme={theme} className="w-full md:w-auto min-w-[260px] md:min-w-[340px] !py-6 md:!py-7">
             {hasExpandedLibrary ? (
-              <>Full Archive on Skool <ExternalLink size={16} /></>
+              <>Access Full Community Archive <ExternalLink size={16} /></>
             ) : (
-              <>Extract More Data</>
+              <>Join Community to Unlock More</>
             )}
           </UI.Button>
         </div>
       </section>
 
       {/* Pathfinder Section */}
-      <section id="pathfinder" className={`py-24 md:py-40 px-6 scroll-mt-24`}>
+      <section id="pathfinder" className="py-24 md:py-40 px-6 scroll-mt-24">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 md:mb-24 space-y-4 md:space-y-6">
             <UI.Badge theme={theme}>Anatomical Audit</UI.Badge>
             <h2 className="text-4xl sm:text-6xl md:text-[8rem] font-black tracking-tighter lowercase leading-none break-words">find your path.</h2>
           </div>
 
-          <div className={`${theme === 'dark' ? 'bg-black shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] md:shadow-[32px_32px_0px_0px_rgba(255,255,255,1)] border-white/10' : 'bg-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] md:shadow-[32px_32px_0px_0px_rgba(0,0,0,1)] border-black'} border-2 md:border-4 p-5 sm:p-10 md:p-20 min-h-[450px] md:min-h-[680px] flex flex-col relative overflow-hidden transition-all duration-700`}>
+          <div className={`${theme === 'dark' ? 'bg-black shadow-[12px_12px_0px_0px_rgba(255,255,255,1)] md:shadow-[32px_32px_0px_0px_rgba(255,255,255,1)] border-white' : 'bg-white shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] md:shadow-[32px_32px_0px_0px_rgba(0,0,0,1)] border-black'} border-4 p-5 sm:p-10 md:p-20 min-h-[450px] md:min-h-[680px] flex flex-col relative overflow-hidden transition-all duration-700`}>
             {pathStep > 0 && (
               <div className="absolute top-4 left-4 md:top-8 md:left-8 flex gap-3 md:gap-6 z-10">
-                <button onClick={undoPath} disabled={pathHistory.length <= 1} className="w-9 h-9 md:w-12 md:h-12 border-2 border-current flex items-center justify-center hover:bg-current hover:text-white transition-all disabled:opacity-10 cursor-pointer rounded-full group">
-                  <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+                <button onClick={undoPath} disabled={pathHistory.length <= 1} className="w-10 h-10 md:w-14 md:h-14 border-2 border-current flex items-center justify-center hover:bg-current hover:text-white transition-all disabled:opacity-10 cursor-pointer rounded-full group">
+                  <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                 </button>
-                <button onClick={resetPathfinder} className="w-9 h-9 md:w-12 md:h-12 border-2 border-current flex items-center justify-center hover:bg-current hover:text-white transition-all cursor-pointer rounded-full group">
-                  <RotateCcw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
+                <button onClick={resetPathfinder} className="w-10 h-10 md:w-14 md:h-14 border-2 border-current flex items-center justify-center hover:bg-current hover:text-white transition-all cursor-pointer rounded-full group">
+                  <RotateCcw size={18} className="group-hover:rotate-180 transition-transform duration-500" />
                 </button>
               </div>
             )}
             <div className="flex-grow flex flex-col justify-center">
               {pathStep === 0 && (
-                <div className="text-center max-w-xl mx-auto py-8 md:py-0">
+                <div className="text-center max-w-xl mx-auto py-8 md:py-0 animate-in fade-in zoom-in-95">
                   <div className="w-16 h-16 md:w-24 md:h-24 border-4 border-current rounded-full flex items-center justify-center mx-auto mb-8 md:mb-12">
                     <Dna size={32} className="animate-pulse" />
                   </div>
                   <p className="text-lg md:text-2xl font-medium lowercase opacity-60 mb-10 md:mb-14 leading-relaxed">
                     Identify the optimal entry point for your specific physiological state and movement objectives.
                   </p>
-                  <UI.Button onClick={() => updatePath(1)} className="w-full !py-6 md:!py-8 !text-xs md:!text-sm" theme={theme}>Assess Movement</UI.Button>
+                  <UI.Button onClick={() => updatePath(1)} className="w-full !py-6 md:!py-8" theme={theme}>Assess Movement</UI.Button>
                 </div>
               )}
               {pathStep === 1 && (
@@ -526,7 +532,7 @@ export default function App() {
                       <button 
                         key={opt.key} 
                         onClick={() => updatePath(2, { style: opt.key })} 
-                        className={`p-5 md:p-10 border-2 md:border-4 border-current transition-all text-left group cursor-pointer 
+                        className={`p-6 md:p-10 border-2 md:border-4 border-current transition-all text-left group cursor-pointer 
                           ${theme === 'dark' 
                             ? 'bg-neutral-900/40 text-white hover:bg-white hover:text-black border-white/20' 
                             : 'bg-white text-black hover:bg-black hover:text-white border-black/20'}`}
@@ -545,7 +551,7 @@ export default function App() {
                   <div className="grid sm:grid-cols-2 gap-4 md:gap-10 max-w-3xl mx-auto">
                     <button 
                       onClick={() => updatePath(3, { feedback: 'self-paced' })} 
-                      className={`p-6 md:p-12 border-2 md:border-4 border-current transition-all text-left group cursor-pointer 
+                      className={`p-8 md:p-12 border-2 md:border-4 border-current transition-all text-left group cursor-pointer 
                         ${theme === 'dark' 
                           ? 'bg-neutral-900/40 text-white hover:bg-white hover:text-black border-white/20' 
                           : 'bg-white text-black hover:bg-black hover:text-white border-black/20'}`}
@@ -556,7 +562,7 @@ export default function App() {
                     </button>
                     <button 
                       onClick={() => updatePath(3, { feedback: 'personalized' })} 
-                      className={`p-6 md:p-12 border-2 md:border-4 border-current transition-all text-left group cursor-pointer 
+                      className={`p-8 md:p-12 border-2 md:border-4 border-current transition-all text-left group cursor-pointer 
                         ${theme === 'dark' 
                           ? 'bg-neutral-900/40 text-white hover:bg-white hover:text-black border-white/20' 
                           : 'bg-white text-black hover:bg-black hover:text-white border-black/20'}`}
@@ -576,7 +582,10 @@ export default function App() {
                     </div>
                   </div>
                   <h2 className="text-3xl sm:text-5xl md:text-8xl font-black tracking-tighter lowercase mb-10 md:mb-16 break-words">{getRecommendation().title}</h2>
-                  <UI.Button onClick={openSkool} className="w-full max-w-md mx-auto !py-6 md:!py-8 !text-sm md:!text-base" theme={theme}>Access Protocol</UI.Button>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <UI.Button onClick={openSkool} className="w-full max-w-sm !py-6 md:!py-8" theme={theme}>Access Protocol</UI.Button>
+                    <UI.Button onClick={undoPath} primary={false} className="w-full max-w-sm !py-6 md:!py-8" theme={theme}>Change Mode</UI.Button>
+                  </div>
                 </div>
               )}
             </div>
@@ -595,9 +604,9 @@ export default function App() {
             </div>
           </div>
           
-          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/10 border border-white/10 transition-all duration-1000 ease-in-out ${isArcExpanded ? 'max-h-[5000px]' : 'max-h-[700px] md:max-h-[460px] overflow-hidden'}`}>
-            {projects.map((project, index) => (
-              <div key={index} onClick={() => setActiveProject(project)} className="p-6 md:p-12 bg-black hover:bg-white/[0.04] transition-all group cursor-pointer border-r border-b border-white/10 animate-in fade-in duration-700" style={{ animationDelay: `${index * 80}ms` }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/10 border border-white/10 overflow-hidden">
+            {projects.slice(0, visibleProjectsRow * projectsPerRow).map((project, index) => (
+              <div key={index} onClick={() => setActiveProject(project)} className="p-8 md:p-12 bg-black hover:bg-white/[0.04] transition-all group cursor-pointer border-white/10 animate-in fade-in duration-700" style={{ animationDelay: `${(index % projectsPerRow) * 80}ms` }}>
                 <div className="text-[10px] md:text-[11px] font-bold opacity-30 mb-6 md:mb-8 uppercase tracking-[0.3em] md:tracking-[0.4em] flex items-center gap-2">
                    <div className="w-1.5 h-1.5 rounded-full bg-white opacity-20 group-hover:bg-white group-hover:opacity-100 transition-all"></div>
                    {project.year}
@@ -610,11 +619,22 @@ export default function App() {
               </div>
             ))}
           </div>
-          <button onClick={() => setIsArcExpanded(!isArcExpanded)} className="mt-12 md:mt-20 mx-auto flex items-center gap-4 md:gap-6 text-[9px] md:text-[11px] font-black uppercase tracking-[0.4em] md:tracking-[0.6em] opacity-30 hover:opacity-100 cursor-pointer p-6 md:p-8 transition-all group">
-             <div className="w-8 md:w-10 h-[2px] bg-current group-hover:w-14 md:group-hover:w-20 transition-all duration-700"></div>
-             {isArcExpanded ? 'collapse history' : 'view full record'}
-             <div className="w-8 md:w-10 h-[2px] bg-current group-hover:w-14 md:group-hover:w-20 transition-all duration-700"></div>
-          </button>
+
+          {projects.length > visibleProjectsRow * projectsPerRow && (
+            <button onClick={() => setVisibleProjectsRow(prev => prev + 1)} className="mt-12 md:mt-20 mx-auto flex items-center gap-4 md:gap-6 text-[9px] md:text-[11px] font-black uppercase tracking-[0.4em] md:tracking-[0.6em] opacity-30 hover:opacity-100 cursor-pointer p-6 md:p-8 transition-all group border-none bg-transparent">
+               <div className="w-8 md:w-10 h-[2px] bg-current group-hover:w-14 md:group-hover:w-20 transition-all duration-700"></div>
+               view more history
+               <div className="w-8 md:w-10 h-[2px] bg-current group-hover:w-14 md:group-hover:w-20 transition-all duration-700"></div>
+            </button>
+          )}
+
+          {visibleProjectsRow > 1 && projects.length <= visibleProjectsRow * projectsPerRow && (
+             <button onClick={() => setVisibleProjectsRow(1)} className="mt-12 md:mt-20 mx-auto flex items-center gap-4 md:gap-6 text-[9px] md:text-[11px] font-black uppercase tracking-[0.4em] md:tracking-[0.6em] opacity-30 hover:opacity-100 cursor-pointer p-6 md:p-8 transition-all group border-none bg-transparent">
+                <div className="w-8 md:w-10 h-[2px] bg-current group-hover:w-14 md:group-hover:w-20 transition-all duration-700"></div>
+                collapse history
+                <div className="w-8 md:w-10 h-[2px] bg-current group-hover:w-14 md:group-hover:w-20 transition-all duration-700"></div>
+             </button>
+          )}
         </div>
       </section>
     </>
@@ -624,7 +644,7 @@ export default function App() {
     <section className="pt-32 md:pt-48 pb-24 px-6 max-w-7xl mx-auto overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-1000">
       <div className="mb-16 md:mb-24 space-y-6 md:space-y-10 text-center md:text-left">
         <button onClick={() => handleNav('home')} className="flex items-center gap-3 text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] opacity-30 hover:opacity-100 cursor-pointer transition-all group mx-auto md:mx-0 bg-transparent border-none">
-          <ChevronLeft size={18} className="group-hover:-translate-x-2 transition-transform" /> Return
+          <ChevronLeft size={18} className="group-hover:-translate-x-2 transition-transform" /> Return Home
         </button>
         <UI.Heading>learn.</UI.Heading>
         <p className="text-xl sm:text-2xl md:text-3xl font-medium opacity-60 lowercase mt-6 md:mt-10 max-w-3xl leading-snug break-words mx-auto md:mx-0">
@@ -636,7 +656,7 @@ export default function App() {
         {PRODUCTS.map((product, i) => (
           <div key={i} className="group grid lg:grid-cols-12 gap-8 md:gap-20 items-center">
             <div className="lg:col-span-5 order-2 lg:order-1 flex justify-center lg:justify-start">
-              <div className="aspect-[4/5] w-full max-w-sm sm:max-w-md border-4 border-current bg-neutral-100 dark:bg-neutral-900 overflow-hidden relative shadow-[12px_12px_0px_0px_rgba(current,1)] group-hover:shadow-[20px_20px_0px_0px_rgba(current,1)] transition-all duration-500">
+              <div className="aspect-[4/5] w-full max-w-sm sm:max-w-md border-4 border-current bg-neutral-100 dark:bg-neutral-900 overflow-hidden relative shadow-[12px_12px_0px_0px_rgba(current,1)] group-hover:shadow-none transition-all duration-500">
                 <UI.Image src={product.gif} alt={product.title} coloredOnHover={true} />
               </div>
             </div>
@@ -644,7 +664,7 @@ export default function App() {
               <div className="space-y-4 md:space-y-6">
                 <div className="flex items-center gap-4">
                   <UI.Badge theme={theme} className="opacity-40">{product.tag}</UI.Badge>
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-20">Log ID: 00{i+1}</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] opacity-20">Protocol 0{i+1}</span>
                 </div>
                 <h3 className="text-4xl sm:text-6xl md:text-8xl font-black lowercase tracking-tighter leading-[0.85] break-words">
                   {product.title}
@@ -657,8 +677,8 @@ export default function App() {
                 </p>
               </div>
 
-              <UI.Button onClick={openSkool} theme={theme} className="w-full sm:w-auto !py-6 md:!py-8 !px-12 md:!px-16 !text-xs md:!text-sm">
-                {product.cta} <ArrowRight size={18} />
+              <UI.Button onClick={openSkool} theme={theme} className="w-full sm:w-auto !py-6 md:!py-8 !px-12 md:!px-16">
+                Master Protocol <ArrowRight size={18} />
               </UI.Button>
             </div>
           </div>
@@ -671,7 +691,7 @@ export default function App() {
     <section className="pt-32 md:pt-48 pb-24 px-6 max-w-5xl mx-auto overflow-hidden animate-in fade-in duration-1000">
       <div className="mb-16 md:mb-32 space-y-6 md:space-y-10 text-center md:text-left">
         <button onClick={() => handleNav('home')} className="flex items-center gap-3 text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] opacity-30 hover:opacity-100 cursor-pointer transition-all group mx-auto md:mx-0 bg-transparent border-none">
-          <ChevronLeft size={18} className="group-hover:-translate-x-2 transition-transform" /> Return
+          <ChevronLeft size={18} className="group-hover:-translate-x-2 transition-transform" /> Return Home
         </button>
         <UI.Heading>blog.</UI.Heading>
         <p className="text-xl sm:text-2xl md:text-3xl font-medium opacity-60 lowercase mt-6 md:mt-10 break-words mx-auto md:mx-0">Updates on the science and culture of movement.</p>
@@ -680,7 +700,7 @@ export default function App() {
         {BLOG_POSTS.map((post, i) => (
           <article key={i} className="group cursor-pointer" onClick={() => setActiveBlogPost(post)}>
             <div className="flex items-center gap-4 md:gap-6 text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] md:tracking-[0.5em] opacity-30 mb-6 md:mb-12 justify-center md:justify-start">
-                <Calendar size={18} /> {post.date} / Log 0{i+1}
+                <Calendar size={18} /> {post.date} / Dispatch 0{i+1}
             </div>
             <div className="grid md:grid-cols-12 gap-8 md:gap-20 items-center">
                 <div className="md:col-span-8 order-2 md:order-1 text-center md:text-left">
@@ -691,11 +711,11 @@ export default function App() {
                         {post.preview}
                     </p>
                     <div className="flex items-center gap-4 md:gap-6 text-[9px] md:text-[11px] font-black uppercase tracking-[0.4em] md:tracking-[0.6em] group-hover:gap-10 transition-all duration-700 justify-center md:justify-start">
-                        read full dispatch <ArrowRight size={20} md={24} />
+                        read full dispatch <ArrowRight size={20} />
                     </div>
                 </div>
                 <div className="md:col-span-4 flex justify-center order-1 md:order-2">
-                    <div className="border-4 border-current bg-neutral-100 dark:bg-neutral-800 overflow-hidden aspect-[4/5] w-full max-w-[240px] md:max-w-[300px] shadow-[12px_12px_0px_0px_rgba(current,1)]">
+                    <div className="border-4 border-current bg-neutral-100 dark:bg-neutral-800 overflow-hidden aspect-[4/5] w-full max-w-[240px] md:max-w-[300px] shadow-[12px_12px_0px_0px_rgba(current,1)] group-hover:shadow-none transition-all duration-500">
                         <UI.Image src={post.gif} alt={post.title} coloredOnHover={true} />
                     </div>
                 </div>
@@ -710,7 +730,7 @@ export default function App() {
     <section className="pt-32 md:pt-48 pb-24 px-6 max-w-7xl mx-auto overflow-hidden animate-in fade-in duration-1000">
       <div className="mb-16 md:mb-32 space-y-6 md:space-y-10 text-center md:text-left">
         <button onClick={() => handleNav('home')} className="flex items-center gap-3 text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] opacity-30 hover:opacity-100 cursor-pointer transition-all group mx-auto md:mx-0 bg-transparent border-none">
-          <ChevronLeft size={18} className="group-hover:-translate-x-2 transition-transform" /> Return
+          <ChevronLeft size={18} className="group-hover:-translate-x-2 transition-transform" /> Return Home
         </button>
         <UI.Heading>about.</UI.Heading>
       </div>
@@ -728,12 +748,12 @@ export default function App() {
               <p className="text-lg sm:text-xl md:text-3xl opacity-60 lowercase leading-relaxed mb-10 md:mb-12 max-w-2xl font-medium">{bio.story}</p>
               <div className="grid grid-cols-2 gap-8 md:gap-12 pt-8 md:pt-12 border-t-2 border-current/20">
                 <div>
-                  <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] opacity-30 block mb-2 md:mb-4">Experience</span>
+                  <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] opacity-30 block mb-2 md:mb-4">Status</span>
                   <span className="text-xl md:text-2xl font-black lowercase">{bio.metrics}</span>
                 </div>
                 {bio.focus.map((f, idx) => (
                   <div key={idx}>
-                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] opacity-30 block mb-2 md:mb-4">Focus 0{idx+1}</span>
+                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em] opacity-30 block mb-2 md:mb-4">Core 0{idx+1}</span>
                     <span className="text-xl md:text-2xl font-black lowercase break-words leading-tight">{f}</span>
                   </div>
                 ))}
@@ -749,7 +769,7 @@ export default function App() {
     <section className="pt-32 md:pt-48 pb-24 px-6 max-w-5xl mx-auto overflow-hidden animate-in fade-in duration-1000">
       <div className="mb-16 md:mb-32 space-y-6 md:space-y-10 text-center md:text-left">
         <button onClick={() => handleNav('home')} className="flex items-center gap-3 text-[10px] md:text-[11px] font-black uppercase tracking-[0.4em] opacity-30 hover:opacity-100 cursor-pointer transition-all group mx-auto md:mx-0 bg-transparent border-none">
-          <ChevronLeft size={18} className="group-hover:-translate-x-2 transition-transform" /> Return
+          <ChevronLeft size={18} className="group-hover:-translate-x-2 transition-transform" /> Return Home
         </button>
         <UI.Heading>hire apex.</UI.Heading>
         <p className="text-xl sm:text-2xl md:text-3xl font-medium opacity-60 lowercase mt-6 md:mt-10 break-words mx-auto md:mx-0">Deployment services for the elite movement sector.</p>
@@ -764,7 +784,7 @@ export default function App() {
             <button key={i} onClick={() => {
                 window.location.href = `mailto:apexmovement@gmail.com?subject=Inquiry: ${cat.title}`;
               }} 
-              className={`p-8 sm:p-12 md:p-16 text-left transition-all group cursor-pointer 
+              className={`p-8 sm:p-12 md:p-16 text-left transition-all group cursor-pointer border-none
                 ${theme === 'dark' 
                   ? 'bg-black text-white hover:bg-white hover:text-black' 
                   : 'bg-white text-black hover:bg-black hover:text-white'}`}
@@ -779,21 +799,19 @@ export default function App() {
   );
 
   return (
-    <div className={`min-h-screen font-sans antialiased overflow-x-hidden transition-colors duration-700 
-      ${theme === 'dark' 
-        ? 'bg-black text-white selection:bg-white selection:text-black' 
-        : 'bg-white text-black selection:bg-yellow-200 selection:text-black'}`}>
+    <div className={`min-h-screen font-sans antialiased overflow-x-hidden transition-colors duration-700 selection:bg-yellow-400 selection:text-black 
+      ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
       
       <div className="fixed inset-0 pointer-events-none opacity-[0.03] z-[1000] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
       {/* MOBILE NAV MENU */}
       {isMenuOpen && (
-        <div className={`fixed inset-0 z-[300] pt-20 pb-12 px-8 flex flex-col transition-all duration-500 animate-in fade-in slide-in-from-right-full ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black shadow-2xl'}`}>
+        <div className={`fixed inset-0 z-[400] pt-20 pb-12 px-8 flex flex-col transition-all duration-500 animate-in fade-in slide-in-from-right-full ${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black shadow-2xl'}`}>
           <div className="flex justify-between items-center mb-12 shrink-0 border-b-2 border-current/10 pb-8">
             <div className="text-2xl font-black tracking-tighter lowercase cursor-pointer flex items-center gap-2" onClick={() => handleNav('home')}>
               {CONFIG.brand}
             </div>
-            <button className="cursor-pointer p-2 border-2 border-current rounded-full hover:rotate-90 transition-transform duration-300 bg-transparent" onClick={() => setIsMenuOpen(false)}><X size={24} /></button>
+            <button className="cursor-pointer p-2 border-2 border-current rounded-full hover:rotate-90 transition-transform duration-300 bg-transparent text-current" onClick={() => setIsMenuOpen(false)}><X size={24} /></button>
           </div>
           
           <div className="flex-grow flex flex-col space-y-4 overflow-y-auto pb-10 scrollbar-hide">
@@ -818,7 +836,7 @@ export default function App() {
              <div className="flex justify-between items-center">
                <div className="flex gap-8">
                 {CONFIG.socials.map((s) => (
-                  <a key={s.key} href={s.url} target="_blank" rel="noreferrer" className="opacity-30 hover:opacity-100 transition-all">{s.icon}</a>
+                  <a key={s.key} href={s.url} target="_blank" rel="noreferrer" className="opacity-30 hover:opacity-100 transition-all text-current">{s.icon}</a>
                 ))}
                </div>
                <UI.Button onClick={openSkool} className="!py-3 !px-6 !text-[10px]" theme={theme}>{CONFIG.cta}</UI.Button>
@@ -828,10 +846,10 @@ export default function App() {
       )}
 
       {/* DESKTOP NAVIGATION */}
-      <nav className={`fixed top-0 w-full z-[150] transition-all duration-700 px-6 py-4 flex justify-between items-center ${scrolled || currentView !== 'home' ? (theme === 'dark' ? 'bg-black/95 border-b-2 border-white/5 text-white' : 'bg-white/95 border-b-2 border-black/5 text-black') : 'bg-transparent text-white'} backdrop-blur-md`}>
+      <nav className={`fixed top-0 w-full z-[300] transition-all duration-700 px-6 py-4 flex justify-between items-center ${scrolled || currentView !== 'home' ? (theme === 'dark' ? 'bg-black/95 border-b-2 border-white/10 text-white' : 'bg-white/95 border-b-2 border-black/10 text-black') : 'bg-transparent text-white'} backdrop-blur-md`}>
         <div onClick={() => handleNav('home')} className="text-xl md:text-2xl font-black tracking-tighter lowercase cursor-pointer group flex items-center gap-2 shrink-0">
-           <Torus className="opacity-40 group-hover:rotate-180 group-hover:opacity-100 transition-all duration-1000" size={18} />
-           {CONFIG.brand}
+            <Torus className="opacity-40 group-hover:rotate-180 group-hover:opacity-100 transition-all duration-1000" size={18} />
+            {CONFIG.brand}
         </div>
         
         <div className="hidden lg:flex flex-grow justify-center">
@@ -857,15 +875,15 @@ export default function App() {
           <UI.Button 
             onClick={openSkool} 
             primary={true}
-            className={`hidden lg:flex !py-2.5 !px-6 !text-[10px] border-none !min-h-0`}
+            className={`hidden lg:flex !py-2.5 !px-6 !text-[10px] border-none !min-h-0 shadow-lg`}
             theme={(scrolled || currentView !== 'home') ? theme : 'dark'}
           >
             {CONFIG.cta}
           </UI.Button>
-          <button onClick={toggleTheme} className="p-2.5 rounded-full hover:bg-current/10 transition-all cursor-pointer border-2 border-current active:scale-90 group bg-transparent">
+          <button onClick={toggleTheme} className="p-2.5 rounded-full hover:bg-current/10 transition-all cursor-pointer border-2 border-current active:scale-90 group bg-transparent text-current">
             {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
           </button>
-          <button className="lg:hidden cursor-pointer p-2.5 border-2 border-current rounded-full bg-transparent" onClick={() => setIsMenuOpen(true)}>
+          <button className="lg:hidden cursor-pointer p-2.5 border-2 border-current rounded-full bg-transparent text-current" onClick={() => setIsMenuOpen(true)}>
             <Menu size={18} />
           </button>
         </div>
@@ -891,7 +909,7 @@ export default function App() {
                     <h2 className="text-4xl md:text-7xl font-black lowercase leading-[0.8] tracking-tighter break-words">{activeManual.title}</h2>
                     <p className="text-lg md:text-2xl font-black lowercase italic opacity-30 leading-tight">"{activeManual.law}"</p>
                 </div>
-                <UI.Button onClick={openSkool} className="w-full !py-6 shadow-xl" theme={theme}>Execute Protocol</UI.Button>
+                <UI.Button onClick={openSkool} className="w-full !py-6 shadow-xl" theme={theme}>Join to View Masterclass</UI.Button>
             </div>
             <div className="space-y-12 border-t-4 border-current pt-12">
                 <div>
@@ -902,6 +920,19 @@ export default function App() {
                     <UI.Badge theme={theme} className="mb-6 !border-current/30">Force Justification</UI.Badge>
                     <p className="text-base md:text-xl opacity-60 lowercase leading-relaxed italic font-medium">{activeManual.why}</p>
                 </div>
+                {activeManual.how && activeManual.how.length > 0 && (
+                  <div className="space-y-6">
+                    <UI.Badge theme={theme}>Mechanical Checkpoints</UI.Badge>
+                    <div className="grid gap-4">
+                      {activeManual.how.map((step, sidx) => (
+                        <div key={sidx} className="flex gap-4 items-start border-l-2 border-current/20 pl-6 py-2">
+                           <span className="font-black opacity-20 text-xl">0{sidx + 1}</span>
+                           <span className="text-lg md:text-xl lowercase font-medium opacity-70">{step}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
             </div>
           </div>
         )}
@@ -933,33 +964,33 @@ export default function App() {
 
       <Modal isOpen={!!activeBlogPost} onClose={() => setActiveBlogPost(null)} theme={theme}>
         {activeBlogPost && (
-          <div className="max-w-4xl mx-auto py-8 space-y-12">
+          <div className="max-w-4xl mx-auto py-8 space-y-12 animate-in fade-in slide-in-from-bottom-4">
             <div className="flex justify-between items-center text-[10px] font-black tracking-widest uppercase opacity-30">
-                <span>Log: {activeBlogPost.id}</span>
+                <span>Dispatch: {activeBlogPost.id}</span>
                 <span>{activeBlogPost.date}</span>
             </div>
             <h2 className="text-4xl md:text-7xl font-black tracking-tighter lowercase leading-none break-words text-center md:text-left">{activeBlogPost.title}</h2>
-            <div className="aspect-[4/5] max-h-[60vh] mx-auto border-4 border-current overflow-hidden max-w-sm">
-               <UI.Image src={activeBlogPost.gif} alt={activeBlogPost.title} forceColor={true} />
+            <div className="aspect-[4/5] max-h-[60vh] mx-auto border-4 border-current overflow-hidden max-w-sm shadow-[12px_12px_0px_0px_rgba(current,1)]">
+                <UI.Image src={activeBlogPost.gif} alt={activeBlogPost.title} forceColor={true} />
             </div>
-            <p className="text-lg md:text-3xl opacity-60 lowercase leading-relaxed italic break-words text-center">{activeBlogPost.preview}</p>
+            <p className="text-lg md:text-3xl opacity-60 lowercase leading-relaxed italic break-words text-center md:text-left">{activeBlogPost.preview}</p>
             <div className="p-12 border-t-4 border-current text-center">
-               <UI.Button onClick={openSkool} theme={theme} className="w-full !py-8">Access Full Dispatch</UI.Button>
+               <UI.Button onClick={openSkool} theme={theme} className="w-full !py-8">Access Full Dispatch on Skool</UI.Button>
             </div>
           </div>
         )}
       </Modal>
 
       {/* FOOTER */}
-      <footer className={`${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'} py-20 px-6 relative z-20 transition-colors duration-1000 border-t border-current/5`}>
+      <footer className={`${theme === 'dark' ? 'bg-black text-white' : 'bg-white text-black'} py-20 px-6 relative z-20 transition-colors duration-1000 border-t-4 border-current`}>
         <div className="max-w-6xl mx-auto flex flex-col items-center gap-12">
           <div className="flex gap-12">
             {CONFIG.socials.map((s) => (
-              <a key={s.key} href={s.url} target="_blank" rel="noreferrer" className="hover:opacity-40 transition-all opacity-40">{s.icon}</a>
+              <a key={s.key} href={s.url} target="_blank" rel="noreferrer" className="hover:opacity-100 transition-all opacity-40 text-current hover:scale-125">{s.icon}</a>
             ))}
           </div>
-          <div className="opacity-40 text-[10px] font-black uppercase tracking-[0.7em] text-center">
-             © 2026 APEX MOVEMENT
+          <div className="opacity-40 text-[10px] font-black uppercase tracking-[0.7em] text-center leading-loose">
+              © 2026 APEX MOVEMENT<br/>efficiency is truth.
           </div>
         </div>
       </footer>
